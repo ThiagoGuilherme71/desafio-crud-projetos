@@ -12,5 +12,6 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 // Rotas protegidas com JWT
 Route::middleware(['jwt.session'])->group(function () {
     Route::get('/home', [HomeController::class, 'home'])->name('home');
+    Route::get('/projects/data', [HomeController::class, 'getProjectsData'])->name('projects.data');
     Route::post('/logout', [AuthController::class, 'logout_web'])->name('logout');
 });
