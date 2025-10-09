@@ -35,7 +35,7 @@
         }
 
         .side-panel {
-            background: linear-gradient(135deg, #53b4e3 0%, #307192ff 100%);
+            background: linear-gradient(135deg, #fbfeffff 0%, #307192ff 100%);
             padding: 3rem;
             display: flex;
             flex-direction: column;
@@ -337,7 +337,7 @@
     <div class="container">
         <!-- Painel Lateral -->
         <div class="side-panel">
-            <div class="icon">📊</div>
+            <div class="icon"><img src="{{ asset('images/logo.png') }}" alt="CRUD Projetos Logo" style="height: 50px; width: auto;"></div>
             <h1>CRUD Projetos</h1>
             <p>Crud para registros de projetos, com objetivo de gerenciar projetos diversos. Faça login ou crie sua conta para começar!</p>
         </div>
