@@ -59,9 +59,13 @@ php artisan migrate <br>
 php artisan config:clear <br>
 php artisan cache:clear <br>
 php artisan route:clear <br>
+exit <br>
 
 # Em casos de erro de permissão após seguir todo o processo altere a permissão:
-sudo chown -R $USER:$USER vendor storage bootstrap/cache database
+sudo docker compose exec app bash <br>
+ou <br>
+sudo docker-compose exec app bash <br>
+sudo chown -R $USER:$USER vendor storage bootstrap/cache database <br>
 
 exit
 
