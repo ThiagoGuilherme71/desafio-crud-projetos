@@ -219,9 +219,121 @@
                 padding: 2rem 1.5rem;
             }
         }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            min-width: 300px;
+            max-width: 400px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast.hiding {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        .toast-error {
+            background: #fed7d7;
+            color: #c53030;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .toast-success {
+            background: #c6f6d5;
+            color: #276749;
+            border-left: 4px solid #38a169;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .toast-message {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.7;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 480px) {
+            .toast-container {
+                left: 10px;
+                right: 10px;
+                top: 10px;
+            }
+
+            .toast {
+                min-width: auto;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <div class="container">
         <!-- Painel Lateral -->
         <div class="side-panel">
@@ -354,8 +466,55 @@
             registerForm.classList.toggle('active');
         }
 
+        // criar/exibir toast
+        function showToast(message, type = 'error') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            const icon = type === 'error' ? '❌' : '✅';
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="closeToast(this)">×</button>
+            `;
+
+            container.appendChild(toast);
+
+            // Auto-remove
+            setTimeout(() => {
+                const closeButton = toast.querySelector('.toast-close');
+                if (closeButton) closeToast(closeButton);
+            }, 5000);
+        }
+
+        function closeToast(button) {
+            const toast = button.closest('.toast');
+            if (!toast) return;
+
+            toast.classList.add('hiding');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }
+
+        @if($errors->any())
+            @foreach($errors->all() as $error)
+                showToast("{{ $error }}", 'error');
+            @endforeach
+        @endif
+
+        @if(session('error'))
+            showToast("{{ session('error') }}", 'error');
+        @endif
+
+        @if(session('success'))
+            showToast("{{ session('success') }}", 'success');
+        @endif
+
         // Se houver erros de validação no registro, mostra o formulário de registro
-        @if(old('name') || (request()->is('register') && (isset($errors) && $errors->any()) ))
+        @if(old('name') || (request()->is('register') && $errors->any()))
             toggleForms();
         @endif
     </script>

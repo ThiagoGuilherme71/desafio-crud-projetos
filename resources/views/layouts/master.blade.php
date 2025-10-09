@@ -6,6 +6,12 @@
     <title>@yield('title', 'PRODEB Projetos')</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
+
+    @stack('styles')
+
     <style>
         * {
             margin: 0;
@@ -41,6 +47,12 @@
             gap: 12px;
         }
 
+        .logo-section img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
         .logo-section h1 {
             font-size: 1.5rem;
             font-weight: 700;
@@ -48,14 +60,17 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            white-space: nowrap;
         }
 
         .header-buttons {
             display: flex;
             gap: 12px;
+            align-items: center;
         }
 
-        .header-buttons a {
+        .header-buttons a,
+        .header-buttons button {
             color: #4a5568;
             text-decoration: none;
             padding: 0.6rem 1.2rem;
@@ -64,6 +79,20 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
             border: 1px solid transparent;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .header-buttons button {
+            background: #e53e3e;
+            color: white;
+            border: none;
+        }
+
+        .header-buttons button:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
         }
 
         .header-buttons a:first-child {
@@ -89,7 +118,7 @@
         main {
             flex: 1;
             padding: 2.5rem 2rem;
-            max-width: 1200px;
+            max-width: 1500px;
             width: 100%;
             margin: 0 auto;
         }
@@ -105,9 +134,8 @@
         footer {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
-            padding: 1rem;
+            padding: 1.5rem 1rem;
             border-top: 1px solid rgba(0, 0, 0, 0.06);
-            max-height: 210px;
         }
 
         .footer-content {
@@ -140,6 +168,8 @@
             font-size: 0.9rem;
             color: #4a5568;
             transition: color 0.3s ease;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
 
         .footer-item:hover {
@@ -149,6 +179,7 @@
         .footer-item a {
             color: inherit;
             text-decoration: none;
+            word-break: break-all;
         }
 
         .footer-bottom {
@@ -162,45 +193,265 @@
 
         @media (max-width: 768px) {
             header {
-                padding: 1rem;
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .logo-section img {
+                height: 40px;
             }
 
             .logo-section h1 {
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
 
             .header-buttons {
-                gap: 8px;
+                gap: 6px;
+                flex-wrap: wrap;
             }
 
-            .header-buttons a {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.85rem;
+            .header-buttons span {
+                font-size: 0.8rem;
+                margin-right: 0.5rem;
+            }
+
+            .header-buttons a,
+            .header-buttons button {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
             }
 
             main {
-                padding: 1.5rem 1rem;
+                padding: 1rem 0.75rem;
             }
 
             .content-wrapper {
-                padding: 1.5rem;
+                padding: 1.25rem;
+                border-radius: 12px;
+            }
+
+            footer {
+                padding: 1.25rem 0.75rem;
             }
 
             .footer-content {
                 grid-template-columns: 1fr;
-                gap: 1rem;
+                gap: 1.25rem;
+            }
+
+            .footer-section h3 {
+                font-size: 0.85rem;
+            }
+
+            .footer-item {
+                font-size: 0.85rem;
+                align-items: flex-start;
+            }
+
+            .footer-item span:first-child {
+                flex-shrink: 0;
+                margin-top: 2px;
+            }
+
+            .footer-bottom {
+                font-size: 0.8rem;
+                margin-top: 1rem;
+                padding-top: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0.6rem 0.75rem;
+            }
+
+            .logo-section img {
+                height: 35px;
+            }
+
+            .logo-section h1 {
+                font-size: 0.9rem;
+            }
+
+            .header-buttons a,
+            .header-buttons button {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .header-buttons span {
+                display: none;
+            }
+
+            main {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .content-wrapper {
+                padding: 1rem;
+                border-radius: 10px;
+            }
+
+            .footer-item {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            min-width: 300px;
+            max-width: 400px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast.hiding {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        .toast-error {
+            background: #fed7d7;
+            color: #c53030;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .toast-success {
+            background: #c6f6d5;
+            color: #276749;
+            border-left: 4px solid #38a169;
+        }
+
+        .toast-warning {
+            background: #fefcbf;
+            color: #744210;
+            border-left: 4px solid #ed8936;
+        }
+
+        .toast-info {
+            background: #bee3f8;
+            color: #2c5282;
+            border-left: 4px solid #3182ce;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .toast-message {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.7;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 480px) {
+            .toast-container {
+                left: 10px;
+                right: 10px;
+                top: 10px;
+            }
+
+            .toast {
+                min-width: auto;
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <header>
         <div class="logo-section">
-            <h1>CRUD PROJETOS</h1>
+            <a href="{{ route('home') }}" style="text-decoration: none; display: flex; align-items: center;">
+                <img src="{{ asset('images/logo.png') }}" alt="CRUD Projetos Logo" style="height: 50px; width: auto;">
+            </a>
         </div>
         <div class="header-buttons">
-            <a href="#">Ver Perfil</a>
-            <a href="#">Sair</a>
+            @auth
+                <span style="color: #4a5568; font-weight: 500; margin-right: 1rem;">
+                    👤 {{ Auth::user()->name }}
+                </span>
+                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="
+                        background: #e53e3e;
+                        color: white;
+                        padding: 0.6rem 1.2rem;
+                        border: none;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">
+                        Sair
+                    </button>
+                </form>
+            @endauth
         </div>
     </header>
 
@@ -253,5 +504,82 @@
             <p>© 2025 Desafio Crud Projetos </p>
         </div>
     </footer>
+
+    <script>
+        // Função para criar e exibir toast
+        function showToast(message, type = 'error') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            const icons = {
+                error: '❌',
+                success: '✅',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+
+            const icon = icons[type] || '❌';
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="closeToast(this)">×</button>
+            `;
+
+            container.appendChild(toast);
+
+            // Auto-remove após 5 segundos
+            setTimeout(() => {
+                const closeButton = toast.querySelector('.toast-close');
+                if (closeButton) closeToast(closeButton);
+            }, 5000);
+        }
+
+        function closeToast(button) {
+            const toast = button.closest('.toast');
+            if (!toast) return;
+
+            toast.classList.add('hiding');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }
+
+        // Exibir erros de validação do Laravel
+        @if($errors->any())
+            @foreach($errors->all() as $error)
+                showToast("{{ $error }}", 'error');
+            @endforeach
+        @endif
+
+        // Exibir mensagens de erro da sessão
+        @if(session('error'))
+            showToast("{{ session('error') }}", 'error');
+        @endif
+
+        // Exibir mensagens de sucesso
+        @if(session('success'))
+            showToast("{{ session('success') }}", 'success');
+        @endif
+
+        // Exibir mensagens de aviso
+        @if(session('warning'))
+            showToast("{{ session('warning') }}", 'warning');
+        @endif
+
+        // Exibir mensagens informativas
+        @if(session('info'))
+            showToast("{{ session('info') }}", 'info');
+        @endif
+    </script>
+
+    <!-- jQuery (necessário para DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+
+    @stack('scripts')
 </body>
 </html>
