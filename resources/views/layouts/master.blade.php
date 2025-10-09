@@ -47,6 +47,12 @@
             gap: 12px;
         }
 
+        .logo-section img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
         .logo-section h1 {
             font-size: 1.5rem;
             font-weight: 700;
@@ -60,9 +66,11 @@
         .header-buttons {
             display: flex;
             gap: 12px;
+            align-items: center;
         }
 
-        .header-buttons a {
+        .header-buttons a,
+        .header-buttons button {
             color: #4a5568;
             text-decoration: none;
             padding: 0.6rem 1.2rem;
@@ -72,6 +80,19 @@
             transition: all 0.3s ease;
             border: 1px solid transparent;
             white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .header-buttons button {
+            background: #e53e3e;
+            color: white;
+            border: none;
+        }
+
+        .header-buttons button:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
         }
 
         .header-buttons a:first-child {
@@ -177,15 +198,26 @@
                 gap: 0.5rem;
             }
 
+            .logo-section img {
+                height: 40px;
+            }
+
             .logo-section h1 {
                 font-size: 1rem;
             }
 
             .header-buttons {
                 gap: 6px;
+                flex-wrap: wrap;
             }
 
-            .header-buttons a {
+            .header-buttons span {
+                font-size: 0.8rem;
+                margin-right: 0.5rem;
+            }
+
+            .header-buttons a,
+            .header-buttons button {
                 padding: 0.5rem 0.75rem;
                 font-size: 0.8rem;
             }
@@ -234,13 +266,22 @@
                 padding: 0.6rem 0.75rem;
             }
 
+            .logo-section img {
+                height: 35px;
+            }
+
             .logo-section h1 {
                 font-size: 0.9rem;
             }
 
-            .header-buttons a {
+            .header-buttons a,
+            .header-buttons button {
                 padding: 0.4rem 0.6rem;
                 font-size: 0.75rem;
+            }
+
+            .header-buttons span {
+                display: none;
             }
 
             main {
@@ -385,11 +426,32 @@
 
     <header>
         <div class="logo-section">
-            <h1>CRUD PROJETOS</h1>
+            <a href="{{ route('home') }}" style="text-decoration: none; display: flex; align-items: center;">
+                <img src="{{ asset('images/logo.png') }}" alt="CRUD Projetos Logo" style="height: 50px; width: auto;">
+            </a>
         </div>
         <div class="header-buttons">
-            <a href="#">Ver Perfil</a>
-            <a href="#">Sair</a>
+            @auth
+                <span style="color: #4a5568; font-weight: 500; margin-right: 1rem;">
+                    👤 {{ Auth::user()->name }}
+                </span>
+                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="
+                        background: #e53e3e;
+                        color: white;
+                        padding: 0.6rem 1.2rem;
+                        border: none;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">
+                        Sair
+                    </button>
+                </form>
+            @endauth
         </div>
     </header>
 
@@ -517,9 +579,6 @@
 
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-
-    <!-- Scripts Externos - Cache Busting -->
-    <script src="{{ asset('js/home.js') }}?v={{ time() }}"></script>
 
     @stack('scripts')
 </body>

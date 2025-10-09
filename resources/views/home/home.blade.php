@@ -19,7 +19,14 @@
         color: #2d3748;
         margin: 0;
     }
+    .btn-secondary {
+        background: #e2e8f0;
+        color: #4a5568;
+    }
 
+    .btn-secondary:hover {
+        background: #cbd5e0;
+    }
     .btn-create {
         background: linear-gradient(135deg, #53b4e3 0%, #307192ff 100%);
         color: white;
@@ -139,6 +146,133 @@
         padding: 0.5rem 1rem;
         margin-left: 0.5rem;
     }
+    .text-center {
+        text-align: center !important;
+    }
+
+    /* Modal Styles */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+        position: relative;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        width: 90%;
+        z-index: 10000;
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .modal-header {
+        padding: 1.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #2d3748;
+    }
+
+    .modal-body {
+        padding: 2rem 1.5rem;
+    }
+
+    .modal-body p {
+        margin: 0.5rem 0;
+        color: #4a5568;
+        font-size: 1rem;
+    }
+
+    .modal-body .project-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #2d3748;
+        padding: 0.75rem;
+        background: #f7fafc;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+
+    .modal-body .warning-text {
+        color: #e53e3e;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-top: 1rem;
+    }
+
+    .modal-footer {
+        padding: 1.5rem;
+        border-top: 2px solid #e2e8f0;
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+    }
 
     @media (max-width: 768px) {
         .page-header {
@@ -154,6 +288,20 @@
             width: 100%;
             justify-content: center;
         }
+
+        .modal-content {
+            width: 95%;
+        }
+
+        .modal-footer {
+            flex-direction: column-reverse;
+        }
+
+        .modal-footer .btn,
+        .modal-footer .btn-danger {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 @endpush
@@ -161,7 +309,7 @@
 @section('content')
     <div class="page-header">
         <h1 class="page-title">📊 Gerenciar Projetos</h1>
-        <button class="btn-create" onclick="alert('Funcionalidade de criar projeto em desenvolvimento!')">
+        <button class="btn-create" onclick="window.location.href='{{ route('projects.create') }}'">
             ➕ Novo Projeto
         </button>
     </div>
@@ -181,6 +329,33 @@
                 <!-- Dados serão carregados via AJAX -->
             </tbody>
         </table>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeDeleteModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚠️ Confirmar Exclusão</h2>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir o projeto:</p>
+                <p class="project-name" id="deleteProjectName"></p>
+                <p class="warning-text">Esta ação não pode ser desfeita!</p>
+            </div>
+            <div class="modal-footer">
+                <a href="{{ route('home') }}" class="btn btn-secondary">
+                    Cancelar
+                </a>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">
+                        🗑️ Excluir Projeto
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -205,10 +380,11 @@
                     }
                 },
                 {
-                    data: 'status',
+                    data: 'ativo',
                     render: function(data) {
-                        const statusClass = data.toLowerCase() === 'ativo' ? 'status-ativo' : 'status-inativo';
-                        return '<span class="status-badge ' + statusClass + '">' + data + '</span>';
+                        const statusClass = data ? 'status-ativo' : 'status-inativo';
+                        let text = data ? 'Ativo' : 'Inativo';
+                        return '<span class="status-badge ' + statusClass + '">' + text + '</span>';
                     }
                 },
                 {
@@ -224,16 +400,17 @@
                     data: null,
                     orderable: false,
                     searchable: false,
+                    className: 'text-center',
                     render: function(data, type, row) {
                         return `
                             <div class="action-buttons">
-                                <button class="btn-action btn-view" title="Visualizar" onclick="alert('Visualizar projeto: ${row.nome}')">
+                                <button class="btn-action btn-view" title="Visualizar" onclick="window.location.href='/projects/${row.id}'">
                                     👁️
                                 </button>
-                                <button class="btn-action btn-edit" title="Editar" onclick="alert('Editar projeto: ${row.nome}')">
+                                <button class="btn-action btn-edit" title="Editar" onclick="window.location.href='/projects/${row.id}/edit'">
                                     ✏️
                                 </button>
-                                <button class="btn-action btn-delete" title="Excluir" onclick="alert('Excluir projeto: ${row.nome}')">
+                                <button class="btn-action btn-delete" title="Excluir" onclick="openDeleteModal(${row.id}, '${row.nome}')">
                                     🗑️
                                 </button>
                             </div>
@@ -248,6 +425,24 @@
             order: [[0, 'asc']],
             responsive: true
         });
+    });
+
+    // Funções para controlar o modal de exclusão
+    function openDeleteModal(projectId, projectName) {
+        document.getElementById('deleteProjectName').textContent = projectName;
+        document.getElementById('deleteForm').action = '/projects/' + projectId;
+        document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    // Fechar modal ao pressionar ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+        }
     });
 </script>
 @endpush
