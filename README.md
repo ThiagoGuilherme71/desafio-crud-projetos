@@ -65,6 +65,9 @@ php artisan cache:clear <br>
 php artisan route:clear <br>
 exit <br>
 
+# ✅ Tudo pronto!, se todos comandos foram executados na ordem, basta acessar a url abaixo e gerenciar seus projetos!
+http://localhost:8888
+
 # Em casos de erro de permissão após seguir todo o processo altere a permissão:
 sudo docker compose exec app bash <br>
 ou <br>
