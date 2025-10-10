@@ -13,14 +13,9 @@ O sistema foi construído para atender à História de Usuário: **CRUD de Proje
 * **Regras de Negócio Implementadas:** Validação de campos obrigatórios (Nome único) e controle de permissões de acesso.
 * **Atributos de Projeto:** Inclui Nome (Obrigatório), Descrição (Opcional), Status (Ativo/Inativo) e Orçamento.
 
-### 🐳 Imagem Oficial no Docker Hub
+### 🐳 Imagem no Docker Hub
 
-A imagem oficial da aplicação está disponível no Docker Hub. https://hub.docker.com/r/thiagoguilherme71/desafio-crud-projetos/tags
-
-Para puxar a última versão e rodar o contêiner manualmente:
-
-docker pull thiagoguilherme71/desafio-crud-projetos:latest
-
+A imagem da aplicação está disponível no Docker Hub. https://hub.docker.com/r/thiagoguilherme71/desafio-crud-projetos/tags
 
 ---
 
