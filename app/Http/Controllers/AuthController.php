@@ -66,10 +66,9 @@ class AuthController extends Controller
     public function register_form()
     {
         try {
-            return view('auth.register');
+            return view('auth.login');
         } catch (\Exception $e) {
-            return redirect()->route('login_form')
-                ->with('error', 'Erro ao carregar formulário de registro.');
+            return back()->with('error', 'Erro ao carregar formulário de login.');
         }
     }
 
@@ -127,27 +126,6 @@ class AuthController extends Controller
                 ->with('error', 'Erro ao realizar login: ' . $e->getMessage());
         }
     }
-
-    /**
-     * Retorna informações do usuário autenticado (API)
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
-    {
-        try {
-            return response()->json([
-                'success' => true,
-                'user' => Auth::guard('api')->user()
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erro ao buscar usuário: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
     /**
      * Realiza logout via API
      *

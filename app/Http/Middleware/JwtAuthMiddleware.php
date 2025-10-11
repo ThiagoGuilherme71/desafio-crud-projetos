@@ -17,11 +17,11 @@ class JwtAuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // dd('middle executando');
         // Pega o token da sessão
         $token = session('jwt_token');
 
         if (!$token) {
-            \Log::warning('Token não encontrado na sessão');
             return redirect()->route('login_form')->with('error', 'Você precisa estar autenticado.');
         }
 
@@ -33,15 +33,9 @@ class JwtAuthMiddleware
             $user = JWTAuth::authenticate();
 
             if (!$user) {
-                \Log::warning('Usuário não encontrado com o token');
                 session()->forget('jwt_token');
                 return redirect()->route('login_form')->with('error', 'Token inválido.');
             }
-
-            \Log::info('Usuário autenticado com sucesso via JWT', [
-                'user_id' => $user->id,
-                'user_email' => $user->email
-            ]);
 
             // Adiciona o usuário na requisição
             $request->merge(['auth_user' => $user]);
@@ -54,7 +48,7 @@ class JwtAuthMiddleware
             session()->forget('jwt_token');
             return redirect()->route('login_form')->with('error', 'Token inválido ou expirado.');
         }
-
+        // dd('middle passou');
         return $next($request);
     }
 }
