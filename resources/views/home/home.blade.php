@@ -10,7 +10,7 @@
     <div class="page-header">
         <h1 class="page-title">📊 Gerenciar Projetos</h1>
         <button class="btn-create" onclick="window.location.href='{{ route('projects.create') }}'">
-            ➕ Novo Projeto
+            Novo Projeto
         </button>
     </div>
 
@@ -21,6 +21,7 @@
                     <th>Nome do Projeto</th>
                     <th>Descrição</th>
                     <th>Status</th>
+                    <th>Tarefas Concluídas</th>
                     <th>Orçamento</th>
                     <th>Ações</th>
                 </tr>
@@ -36,7 +37,7 @@
         <div class="modal-overlay" onclick="closeDeleteModal()"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <h2>⚠️ Confirmar Exclusão</h2>
+                <h2>Confirmar Exclusão</h2>
             </div>
             <div class="modal-body">
                 <p>Tem certeza que deseja excluir o projeto:</p>
@@ -72,6 +73,9 @@
                 {
                     data: 'descricao',
                     render: function(data) {
+                        if (!data || data.length === 0) {
+                            return '<span class="description-cell text-muted">Sem descrição</span>';
+                        }
                         if (data.length > 100) {
                             return '<span class="description-cell" title="' + data + '">' +
                                    data.substring(0, 100) + '...</span>';
@@ -88,8 +92,40 @@
                     }
                 },
                 {
+                    data: 'tarefas_progresso',
+                    className: 'text-center',
+                    render: function(data) {
+                        const parts = data.split('/');
+                        const concluidas = parseInt(parts[0]);
+                        const total = parseInt(parts[1]);
+
+                        if (total === 0) {
+                            return '<span class="tasks-progress no-tasks">Sem tarefas</span>';
+                        }
+
+                        const percentage = Math.round((concluidas / total) * 100);
+                        let progressClass = 'progress-low';
+
+                        if (percentage >= 75) {
+                            progressClass = 'progress-high';
+                        } else if (percentage >= 50) {
+                            progressClass = 'progress-medium';
+                        }
+
+                        return `
+                            <div class="tasks-progress-container">
+                                <span class="tasks-progress ${progressClass}">${data}</span>
+                                <small class="progress-percentage">(${percentage}%)</small>
+                            </div>
+                        `;
+                    }
+                },
+                {
                     data: 'orcamento',
                     render: function(data) {
+                        if (!data || data == 0) {
+                            return '<span class="text-muted">Não informado</span>';
+                        }
                         return 'R$ ' + parseFloat(data).toLocaleString('pt-BR', {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2

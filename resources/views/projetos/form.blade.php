@@ -166,14 +166,14 @@
 
         if (!nome) {
             e.preventDefault();
-            alert('Por favor, preencha o nome do projeto.');
+            showToast('Por favor, preencha o nome do projeto.', 'warning');
             document.getElementById('nome').focus();
             return false;
         }
 
         if (ativo === '') {
             e.preventDefault();
-            alert('Por favor, selecione o status do projeto.');
+            showToast('Por favor, selecione o status do projeto.', 'warning');
             document.getElementById('ativo').focus();
             return false;
         }

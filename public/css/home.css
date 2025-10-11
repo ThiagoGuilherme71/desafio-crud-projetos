@@ -297,3 +297,53 @@
             justify-content: center;
         }
     }
+
+    /* Estilos para a coluna de progresso das tarefas */
+    .tasks-progress-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .tasks-progress {
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        display: inline-block;
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .tasks-progress.no-tasks {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .tasks-progress.progress-low {
+        background-color: #fee2e2;
+        color: #dc2626;
+    }
+
+    .tasks-progress.progress-medium {
+        background-color: #fef3c7;
+        color: #d97706;
+    }
+
+    .tasks-progress.progress-high {
+        background-color: #dcfce7;
+        color: #16a34a;
+    }
+
+    .progress-percentage {
+        color: #6b7280;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .text-muted {
+        color: #6c757d !important;
+        font-style: italic;
+    }

@@ -16,13 +16,23 @@
 <body>
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-
     <header>
         <div class="logo-section">
             <a href="{{ route('home') }}" style="text-decoration: none; display: flex; align-items: center;">
                 <img src="{{ asset('images/logo.png') }}" alt="CRUD Projetos Logo" style="height: 50px; width: auto;">
             </a>
         </div>
+
+        <!-- Menu de Navegação Central -->
+        <nav class="main-nav">
+            <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('projects.*') ? 'active' : '' }}">
+                📊 Projetos
+            </a>
+            <a href="{{ route('tasks.index') }}" class="nav-link {{ request()->routeIs('tasks.*') ? 'active' : '' }}">
+                📋 Tarefas
+            </a>
+        </nav>
+
         <div class="header-buttons">
             @auth
                 <span style="color: #4a5568; font-weight: 500; margin-right: 1rem;">
