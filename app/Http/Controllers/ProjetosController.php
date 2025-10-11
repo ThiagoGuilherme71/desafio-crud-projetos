@@ -7,19 +7,9 @@ use Illuminate\Http\Request;
 
 class ProjetosController extends Controller
 {
-    /**
-     * Exibe a view de listagem de projetos
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
-        try {
-            return view('projetos.index');
-        } catch (\Exception $e) {
-            return redirect()->route('home')
-                ->with('error', 'Erro ao carregar a página: ' . $e->getMessage());
-        }
+        //
     }
 
     /**
@@ -195,10 +185,21 @@ class ProjetosController extends Controller
     public function getProjectsData()
     {
         try {
-            $projects = Project::all();
+            $projects = Project::with('tasks')->get();
 
             return response()->json([
-                'data' => $projects
+                'data' => $projects->map(function ($project) {
+                    return [
+                        'id' => $project->id,
+                        'nome' => $project->nome,
+                        'descricao' => $project->descricao,
+                        'ativo' => $project->ativo,
+                        'orcamento' => $project->orcamento,
+                        'tarefas_progresso' => $project->getProgressoTarefas(),
+                        'created_at' => $project->created_at->format('d/m/Y H:i'),
+                        'updated_at' => $project->updated_at->format('d/m/Y H:i'),
+                    ];
+                })
             ]);
         } catch (\Exception $e) {
             return response()->json([

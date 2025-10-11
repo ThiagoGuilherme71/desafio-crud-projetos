@@ -3,7 +3,8 @@
 use App\Http\Controllers\{
     AuthController,
     HomeController,
-    ProjetosController
+    ProjetosController,
+    TaskController
 };
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,6 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 // Rotas protegidas com JWT
 Route::middleware(['jwt.session'])->group(function () {
     // Home
-    // The home route is now '/', but '/home' is kept for backward compatibility.
     Route::get('/', [HomeController::class, 'home'])->name('home');
     Route::get('/home', [HomeController::class, 'home']);
 
@@ -30,6 +30,19 @@ Route::middleware(['jwt.session'])->group(function () {
         Route::get('/{id}/edit', [ProjetosController::class, 'edit'])->name('edit');
         Route::put('/{id}', [ProjetosController::class, 'update'])->name('update');
         Route::delete('/{id}', [ProjetosController::class, 'destroy'])->name('destroy');
+    });
+
+    // CRUD de Tarefas
+    Route::prefix('tasks')->name('tasks.')->group(function () {
+        Route::get('/data', [TaskController::class, 'getTasksData'])->name('data');
+        Route::get('/', [TaskController::class, 'index'])->name('index');
+        Route::get('/create', [TaskController::class, 'create'])->name('create');
+        Route::post('/', [TaskController::class, 'store'])->name('store');
+        Route::get('/{task}', [TaskController::class, 'show'])->name('show');
+        Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('edit');
+        Route::put('/{task}', [TaskController::class, 'update'])->name('update');
+        Route::delete('/{task}', [TaskController::class, 'destroy'])->name('destroy');
+        Route::patch('/{task}/toggle-status', [TaskController::class, 'toggleStatus'])->name('toggle-status');
     });
 
     // Logout
