@@ -18,34 +18,11 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Task::with(['projeto', 'tarefaPredecessora']);
-
-        // Filtro: projeto
-        if ($request->has('projeto_id')) {
-            $query->porProjeto($request->projeto_id);
-        }
-
-        // Filtro: status
-        if ($request->has('concluida')) {
-            if ($request->concluida === '1' || $request->concluida === 'true') {
-                $query->concluidas();
-            } elseif ($request->concluida === '0' || $request->concluida === 'false') {
-                $query->naoConcluidas();
-            }
-        }
-
-        // Filtro: descrição
-        if ($request->has('search') && $request->search) {
-            $query->where('descricao', 'like', '%' . $request->search . '%');
-        }
-
-        $tasks = $query->orderBy('created_at', 'desc')->get();
-
         $projects = Project::where('ativo', true)
             ->orderBy('nome')
             ->get();
 
-        return view('tarefas.index', compact('tasks', 'projects'));
+        return view('tarefas.index', compact('projects'));
     }
 
     /**
@@ -111,7 +88,7 @@ class TaskController extends Controller
             }
         }
 
-        $validated['concluida'] = false;
+        $validated['concluida'] = false; // garantir que nova tarefa inicia como não concluída
 
         $task = Task::create($validated);
 
