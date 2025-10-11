@@ -29,7 +29,9 @@ cp .env.example .env
 
 #  Exporta UID e GID do usuário atual (evita problemas de permissão)
 export UID=$(id -u)
-export GID=$(id -g)
+export GID=$(id -g) <br>
+Em caso de erro rode os comandos: id -u & id -g, depois copie e cole as variáveis no .env (exemplo: UID=1000
+GID=1000)
 
 # Adiciona UID e GID ao .env para evitar problemas de permissão
 echo -e "\nUID=$(id -u)\nGID=$(id -g)" >> .env
@@ -73,6 +75,7 @@ sudo docker compose exec app bash <br>
 ou <br>
 sudo docker-compose exec app bash <br>
 sudo chown -R $USER:$USER vendor storage bootstrap/cache database <br>
+Caso persista, navegue até a pasta do projeto e dê permissão manualmente
 
 exit
 
