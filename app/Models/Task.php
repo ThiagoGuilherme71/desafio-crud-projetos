@@ -37,7 +37,7 @@ class Task extends Model
     {
         return $this->hasMany(Task::class, 'tarefa_predecessora_id');
     }
-    // Scopes para facilitar consultas
+    // Scopes para facilitar consultas dos filtros da index
     public function scopeConcluidas($query)
     {
         return $query->where('concluida', true);
@@ -52,7 +52,7 @@ class Task extends Model
     {
         return $query->where('projeto_id', $projetoId);
     }
-    // Validações adicionais
+    // Validações
     public function podeSerExcluida(): bool
     {
         return $this->tarefasSucessoras()->count() === 0;
