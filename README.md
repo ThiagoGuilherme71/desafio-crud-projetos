@@ -13,6 +13,12 @@ O sistema foi construído para atender à História de Usuário: **CRUD de Proje
 * **Regras de Negócio Implementadas:** Validação de campos obrigatórios (Nome único) e controle de permissões de acesso.
 * **Atributos de Projeto:** Inclui Nome (Obrigatório), Descrição (Opcional), Status (Ativo/Inativo) e Orçamento.
 
+### Stack:
+* **Framework:** Laravel.
+* **Linguagem:** PHP.
+* **Banco de Dados:** SQLite.
+* **Padrão de Arquitetura:** MVC.
+
 ### 🐳 Imagem no Docker Hub
 
 A imagem da aplicação está disponível no Docker Hub. https://hub.docker.com/r/thiagoguilherme71/desafio-crud-projetos/tags
