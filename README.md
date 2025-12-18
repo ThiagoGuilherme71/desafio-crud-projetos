@@ -1,9 +1,18 @@
 # 📊 CRUD PROJETOS: Gerenciamento Simplificado
 
+
 Este projeto é uma **API RESTful** desenvolvida em **Laravel** que implementa as funcionalidades básicas de um **CRUD (Create, Read, Update, Delete)** para gerenciamento de projetos. A autenticação é realizada via **JSON Web Token (JWT)**.
 
 ---
 
+- ## 🛠 Design
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/295635cf-6f8c-41fc-8284-459e56a8a3b4" alt="desafio-docker01" width="400" />
+  <img src="https://github.com/user-attachments/assets/3ddb460a-128c-4a4b-a1e2-8d1c14787820" alt="desafio-docker02" width="400" />
+</p>
+
+
+---
 ## 📌 Resumo do Projeto
 
 O sistema foi construído para atender à História de Usuário: **CRUD de Projetos**. Seu objetivo é fornecer uma ferramenta para que **usuários autenticados** possam criar, visualizar, editar e excluir projetos de forma eficiente.
