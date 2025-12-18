@@ -1,7 +1,7 @@
 # 📊 CRUD PROJETOS: Gerenciamento Simplificado
 
 
-Este projeto é uma **API RESTful** desenvolvida em **Laravel** que implementa as funcionalidades básicas de um **CRUD (Create, Read, Update, Delete)** para gerenciamento de projetos. A autenticação é realizada via **JSON Web Token (JWT)**.
+Este projeto é um desenvolvido em **Laravel** que implementa as funcionalidades básicas de um **CRUD (Create, Read, Update, Delete)** para gerenciamento de projetos. A autenticação é realizada via **JSON Web Token (JWT)**.
 
 ---
 
@@ -15,7 +15,7 @@ Este projeto é uma **API RESTful** desenvolvida em **Laravel** que implementa a
 ---
 ## 📌 Resumo do Projeto
 
-O sistema foi construído para atender à História de Usuário: **CRUD de Projetos**. Seu objetivo é fornecer uma ferramenta para que **usuários autenticados** possam criar, visualizar, editar e excluir projetos de forma eficiente.
+O sistema foi construído para atender à História de Usuário: **CRUD de Projetos**. Seu objetivo é fornecer uma ferramenta para que **usuários autenticados** possam criar, visualizar, editar e excluir projetos e tarefas de forma eficiente.
 
 ### Funcionalidades Chave:
 * **Autenticação JWT:** Todas as rotas de gerenciamento de projetos são protegidas.
