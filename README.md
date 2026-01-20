@@ -1,7 +1,7 @@
 # 📊 CRUD PROJETOS: Gerenciamento Simplificado
 
 
-Este projeto é um desenvolvido em **Laravel** que implementa as funcionalidades básicas de um **CRUD (Create, Read, Update, Delete)** para gerenciamento de projetos. A autenticação é realizada via **JSON Web Token (JWT)**.
+Este projeto é um desenvolvido em **Laravel** que implementa as funcionalidades básicas de um **CRUD (Create, Read, Update, Delete)** para gerenciamento de projetos e tarefas. A autenticação é realizada via **JSON Web Token (JWT)** e o deploy com CI/CD via **Docker Hub**.
 
 ---
 
@@ -19,8 +19,8 @@ O sistema foi construído para atender à História de Usuário: **CRUD de Proje
 
 ### Funcionalidades Chave:
 * **Autenticação JWT:** Todas as rotas de gerenciamento de projetos são protegidas.
-* **Regras de Negócio Implementadas:** Validação de campos obrigatórios (Nome único) e controle de permissões de acesso.
-* **Atributos de Projeto:** Inclui Nome (Obrigatório), Descrição (Opcional), Status (Ativo/Inativo) e Orçamento.
+* **Regras de Negócio Implementadas:** Validação de duplicidade, dependências, predecessão e controle de permissões de acesso.
+* **Atributos de Projeto:** Inclui Nome (Obrigatório), Descrição (Opcional), Status (Ativo/Inativo), Orçamento e Tarefas.
 
 ### Stack:
 * **Framework:** Laravel.
